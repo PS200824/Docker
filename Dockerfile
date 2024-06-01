@@ -38,10 +38,5 @@ RUN composer update
 # Set the permissions for the Laravel storage folder
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Set the permissions for the Laravel public directory
-RUN chown -R www-data:www-data /var/www/public
-
-RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/public|' /etc/apache2/sites-available/000-default.conf
-
 # Set the start command
 CMD ["apache2-foreground"]
