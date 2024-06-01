@@ -18,24 +18,24 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16'
-        
+
       - name: Set up PHP
         uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
         with:
-          php-version: '8.1'
-  
+          php-version: '8.2'
+
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-  
+
       - name: Install frontend dependencies
         run: npm install
-  
+
       - name: Build assets
         run: npm run build
-  
+
       - name: Set directory permissions
         run: chmod -R 777 storage bootstrap/cache
-  
+
       - name: Install PHP dependencies
         run: |
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
@@ -43,21 +43,21 @@ jobs:
           COMPOSER_PROCESS_TIMEOUT: 0
           COMPOSER_NO_INTERACTION: 1
           COMPOSER_NO_AUDIT: 1
-  
+
       - name: Generate key
         run: php artisan key:generate
-  
+
       - name: Create Database
         run: |
           mkdir -p database
           touch database/database.sqlite
-  
+
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
         run: php artisan test
-  
+
       - name: Display Laravel logs on failure
         if: always() && failure()
         run: cat storage/logs/laravel.log
