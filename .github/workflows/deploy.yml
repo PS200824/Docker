@@ -10,6 +10,21 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: docker
+          MYSQL_USER: root
+          MYSQL_PASSWORD:
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
     steps:
 
       - uses: actions/checkout@v2
@@ -54,8 +69,12 @@ jobs:
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
         env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: database/database.sqlite
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: docker
+          DB_USERNAME: root
+          DB_PASSWORD: 
         run: php artisan test
 
       - name: Login to Docker Hub
