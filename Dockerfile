@@ -64,7 +64,13 @@ RUN chmod -R 775 /var/www
 #Change current user to www-data (Apache user)
 USER www-data
 
-#Set ServerName to suppress Apache warning
+# Install Apache
+RUN apt-get update && apt-get install -y apache2
+
+# Change the permissions of the Apache configuration file
+RUN chmod 644 /etc/apache2/apache2.conf
+
+# Add the ServerName directive to the Apache configuration file
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 EXPOSE 80
 CMD ["apache2-foreground"]

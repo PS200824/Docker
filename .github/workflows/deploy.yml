@@ -75,4 +75,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/docker_deploy:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/laravel-app:latest
