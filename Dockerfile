@@ -1,7 +1,5 @@
-#Set permissions for Laravel application directory
+
 FROM php:8.2-apache
-RUN chown -R www-data:www-data /var/www
-RUN chmod -R 775 /var/www
 
 #Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -67,7 +65,6 @@ RUN chmod -R 775 /var/www
 #Change current user to www-data (Apache user)
 USER www-data
 
-#Set ServerName to suppress Apache warning
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 EXPOSE 80
 CMD ["apache2-foreground"]
