@@ -1,7 +1,9 @@
-# Use the official PHP image as the base image
+#Set permissions for Laravel application directory
+RUN chown -R www-data:www-data /var/www
+RUN chmod -R 775 /var/www
 FROM php:8.2-apache
 
-# Install system dependencies
+#Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -13,23 +15,24 @@ RUN apt-get update && apt-get install -y \
     sqlite3 \
     libsqlite3-dev
 
+#Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql gd
+#Install PHP extensions
+RUN docker-php-ext-install pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd
 
-# Install Composer
+#Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set up the workbook
+#Set working directory
 WORKDIR /var/www
 
-# Copy the current project to the workbook
+#Copy existing application directory contents
 COPY . /var/www
 
-# Install project dependencies
+#Install project dependencies
 RUN composer install
 
-RUN composer update
 #Ensure the 'public' directory is set as DocumentRoot
 RUN sed -i 's!/var/www/html!/var/www/public!g' /etc/apache2/sites-available/000-default.conf
 
@@ -64,13 +67,7 @@ RUN chmod -R 775 /var/www
 #Change current user to www-data (Apache user)
 USER www-data
 
-# Install Apache
-RUN apt-get update && apt-get install -y apache2
-
-# Change the permissions of the Apache configuration file
-RUN chmod 644 /etc/apache2/apache2.conf
-
-# Add the ServerName directive to the Apache configuration file
+#Set ServerName to suppress Apache warning
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 EXPOSE 80
 CMD ["apache2-foreground"]
