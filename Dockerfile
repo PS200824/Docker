@@ -1,7 +1,7 @@
 #Set permissions for Laravel application directory
+FROM php:8.2-apache
 RUN chown -R www-data:www-data /var/www
 RUN chmod -R 775 /var/www
-FROM php:8.2-apache
 
 #Install system dependencies
 RUN apt-get update && apt-get install -y \
