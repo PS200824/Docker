@@ -69,3 +69,10 @@ jobs:
       - name: Display Laravel logs on failure
         if: always() && failure()
         run: cat storage/logs/laravel.log
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/laravel-app:latest
